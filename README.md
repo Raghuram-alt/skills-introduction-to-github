@@ -13,7 +13,7 @@ npm run dev      # builds and serves http://localhost:3000
 npm run typecheck
 ```
 
-`npm start` serves an existing build. After source changes, rebuild and refresh the browser. The development server is for local previews.
+`npm start` serves an existing build. After source changes, rebuild and refresh the browser. The development server is for local previews. It binds to `127.0.0.1` by default. To allow access from a sandbox preview, run `HOST=0.0.0.0 npm start` (or `HOST=0.0.0.0 npm run dev`).
 
 ## Use
 

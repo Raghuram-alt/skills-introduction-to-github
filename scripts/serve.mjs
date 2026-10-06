@@ -11,4 +11,4 @@ createServer(async (req, res) => {
     const body = await readFile(file);
     res.writeHead(200, { 'Content-Type': types[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache' }); res.end(body);
   } catch { res.writeHead(404); res.end('Not found'); }
-}).listen(3000, '0.0.0.0', () => console.log('Anime.js playground ready on http://localhost:3000'));
+}).listen(3000, process.env.HOST || '127.0.0.1', () => console.log('Anime.js playground ready on http://localhost:3000'));
