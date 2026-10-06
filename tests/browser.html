@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Anime.js browser integration checks</title><body><h1>Browser integration checks</h1><pre id="results">Running…</pre><script src="../dist/anime.min.js"></script><script type="module">
+import anime from '../dist/anime.js';
+const results = [];
+const check = (name, assertion) => { if (!assertion) throw new Error(name); results.push(name); };
+try {
+  check('script-tag global and stagger export', typeof window.anime === 'function' && typeof window.anime.stagger === 'function');
+  const element = document.createElement('div'); element.className = 'fixture'; element.style.transform = 'translateY(10px)'; document.body.append(element);
+  const a = anime({ targets: '.fixture', translateX: [0, 100], rotate: [0, 180], opacity: [0, 1], backgroundColor: ['#000', '#fff'], width: [0, 100], autoplay: false, easing: 'linear', duration: 100 });
+  a.seek(50);
+  check('CSS selectors and transforms preserve other components', element.style.transform === 'translateY(10px) translateX(50px) rotate(90deg)');
+  check('CSS numeric units, opacity and colors', element.style.width === '50px' && element.style.opacity === '0.5' && element.style.backgroundColor === 'rgb(128, 128, 128)');
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); const circle = document.createElementNS(svg.namespaceURI, 'circle'); circle.setAttribute('cx', '10'); svg.append(circle); document.body.append(svg);
+  anime({ targets: circle, cx: 110, r: [0, 20], strokeDashoffset: [100, 0], autoplay: false, duration: 100, easing: 'linear' }).seek(50);
+  check('SVG existing and new attributes', circle.getAttribute('cx') === '60' && circle.getAttribute('r') === '10');
+  check('SVG stroke style interpolation', circle.style.strokeDashoffset === '50');
+  anime({ targets: document.querySelectorAll('.fixture'), '--progress': [0, 1], autoplay: false, duration: 100, easing: 'linear' }).seek(50);
+  check('NodeList targets and CSS custom properties', element.style.getPropertyValue('--progress') === '0.5');
+  const object = { count: 0 }; window.anime({ targets: object, count: 10, autoplay: false, duration: 100, easing: 'linear' }).seek(50);
+  check('IIFE bundle animates objects', object.count === 5);
+  const empty = anime({ targets: '.not-present', autoplay: false }); check('unmatched selector is a no-op', empty.duration === 0);
+  window.__testResults = { passed: results.length, results }; document.querySelector('#results').textContent = JSON.stringify(window.__testResults, null, 2);
+} catch (error) { window.__testResults = { error: error.message, passed: results.length }; document.querySelector('#results').textContent = error.stack; }
+</script></body></html>

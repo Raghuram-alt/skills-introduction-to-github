@@ -35,3 +35,7 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Animation library build and development dependencies
+node_modules/
+dist/
